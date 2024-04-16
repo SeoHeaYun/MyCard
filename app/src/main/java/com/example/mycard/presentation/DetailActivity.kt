@@ -29,7 +29,7 @@ class DetailActivity : AppCompatActivity() {
         val cardMoney = item?.cardMoney
 
         // 숫자에 소수점 추가
-        val decimal = DecimalFormat("0,000.00")
+        val decimal = DecimalFormat("0,000.00") // cf. ###
         val num = decimal.format(cardMoney)
 
        binding.tvName.text = cardName
