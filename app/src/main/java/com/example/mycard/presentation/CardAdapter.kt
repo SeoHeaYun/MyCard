@@ -5,6 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mycard.R
 import com.example.mycard.data.CardData
+import com.example.mycard.data.CardData.Companion.VIEW_TYPE1
+import com.example.mycard.data.CardData.Companion.VIEW_TYPE2
+import com.example.mycard.data.CardData.Companion.VIEW_TYPE3
 import com.example.mycard.databinding.ItemType1Binding
 import com.example.mycard.databinding.ItemType2Binding
 import com.example.mycard.databinding.ItemType3Binding
@@ -25,12 +28,10 @@ class CardAdapter( private val onClick: (CardData) -> Unit) :
                 onClick(cardList[position])
             }
         }
-
         fun bind1(card: CardData) {
             // 숫자에 소수점 추가하기
             val decimal = DecimalFormat("#,###")
             val num = decimal.format(card.cardMoney)
-
             binding.cardName.text = card.cardName
             binding.cardExpiration.text = card.cardExpiration
             binding.cardNumber.text = card.cardNumber
@@ -82,12 +83,15 @@ class CardAdapter( private val onClick: (CardData) -> Unit) :
         }
     }
 
-
-
     override fun getItemViewType(position: Int): Int {
-        return cardList[position].viewType
+        return when (position) {
+            0 -> VIEW_TYPE1
+            1 -> VIEW_TYPE2
+            2 -> VIEW_TYPE3
+            else -> throw IllegalArgumentException("Invalid position")
+        }
+//                cardList[position].viewType
     }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType) {
             CardData.VIEW_TYPE1 -> {

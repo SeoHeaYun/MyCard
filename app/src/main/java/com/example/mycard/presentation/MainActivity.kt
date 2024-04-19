@@ -31,11 +31,9 @@ class MainActivity : AppCompatActivity() {
         Log.d("card", card.toString())
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
 
         // SingletionData 인스턴스 얻기
         val singletonData = SingletonData.getDataSource()
