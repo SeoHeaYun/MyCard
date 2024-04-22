@@ -3,7 +3,7 @@ package com.example.mycard.data
 class SingletonData { //Singleton 생성
     companion object {
         private var INSTANCE: SingletonData? = null
-        fun getDataSource(): SingletonData {
+        fun getSingleTon(): SingletonData {
             return synchronized(SingletonData::class) {
                 val newInstance = INSTANCE ?: SingletonData()
                 newInstance// return 값
@@ -11,8 +11,6 @@ class SingletonData { //Singleton 생성
         }
     }
 
-    fun getCardList(): List<CardData> {
-        return dataList()
-    }
-
+    fun getCardList() = dataList()
 }
+

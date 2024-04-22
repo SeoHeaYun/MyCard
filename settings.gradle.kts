@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "mycard"
+rootProject.name = "MyCard"
 include(":app")
  

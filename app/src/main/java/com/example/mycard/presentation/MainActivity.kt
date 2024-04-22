@@ -3,18 +3,26 @@ package com.example.mycard
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mycard.data.CardData
-import com.example.mycard.data.SingletonData
 import com.example.mycard.databinding.ActivityMainBinding
 import com.example.mycard.presentation.CardAdapter
+import com.example.mycard.presentation.CardViewModel
+import com.example.mycard.presentation.CardViewModelFactory
 import com.example.mycard.presentation.DetailActivity
+import com.example.mycard.presentation.cardList
 import java.text.DecimalFormat
 
 class MainActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+
+    // 뷰모델 생성
+    private val cardViewModel by viewModels<CardViewModel> { // by viewModels 종속성 추가:
+        CardViewModelFactory()
+    }
 
     private val cardAdapter: CardAdapter by lazy {
         CardAdapter { item ->     // 클릭 이벤트가 발생한 리사이클러뷰 아이템이 넘겨준다 -> 생성자 호출하여 adapter 초기화. ItemData 타입의 파라미터로만 콜백 초기화가능
@@ -35,9 +43,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        // SingletionData 인스턴스 얻기
-        val singletonData = SingletonData.getDataSource()
-        cardAdapter.cardList = singletonData.getCardList()  // 아이템 목록 가져와서 사용하기
+        // ViewModel 사용
+        cardList = cardViewModel.cardLiveData
+
+        // ViewModel 사용 안할 경우: 싱글톤을 activity에서 생성함
+         //val singletonData = SingletonData.getSingleTon() // 싱글톤 인스턴스 얻기
+         //cardList = singletonData.getCardList()  // 아이템 목록 가져와서 사용하기
+
 
         // 리싸이클러뷰와 어뎁터 연결
         with(binding.recyclerView) { // binding.recyclerView가 null이 아님이 보장될 것!

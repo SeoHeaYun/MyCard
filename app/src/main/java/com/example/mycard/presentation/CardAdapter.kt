@@ -14,13 +14,13 @@ import com.example.mycard.databinding.ItemType3Binding
 import java.lang.RuntimeException
 import java.text.DecimalFormat
 
+var cardList = listOf<CardData>() // iner class로 안만들어서 전역 변수로 뺌
 class CardAdapter( private val onClick: (CardData) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {  // 멀티뷰 홀더이므로 ViewHolder로 지정.
 
-    var cardList = listOf<CardData>()
 
     // 뷰홀더1
-    inner class CardViewHolder1(private var binding: ItemType1Binding, val onClick: (CardData) -> Unit)
+    class CardViewHolder1(private var binding: ItemType1Binding, val onClick: (CardData) -> Unit)  // 직렬화 문제 발생 가능성 / inner class 내부에 outer class 정보를 보관, 참조를 해제하지 못하면 메모리 누수 발생가능성
         : RecyclerView.ViewHolder(binding.root) {
 
         init {
@@ -41,7 +41,7 @@ class CardAdapter( private val onClick: (CardData) -> Unit) :
     }
 
     // 뷰홀더2
-    inner class CardViewHolder2(private var binding: ItemType2Binding, val onClick: (CardData) -> Unit)
+    class CardViewHolder2(private var binding: ItemType2Binding, val onClick: (CardData) -> Unit)
         : RecyclerView.ViewHolder(binding.root) {
         init {
             itemView.setOnClickListener {
@@ -53,7 +53,6 @@ class CardAdapter( private val onClick: (CardData) -> Unit) :
             // 숫자에 소수점 추가하기
             val decimal = DecimalFormat("#,###")
             val num = decimal.format(card.cardMoney)
-
             binding.cardName.text = card.cardName
             binding.cardExpiration.text = card.cardExpiration
             binding.cardNumber.text = card.cardNumber
@@ -63,7 +62,7 @@ class CardAdapter( private val onClick: (CardData) -> Unit) :
     }
 
     // 뷰홀더3
-    inner class CardViewHolder3(private var binding: ItemType3Binding, val onClick: (CardData) -> Unit)
+     class CardViewHolder3(private var binding: ItemType3Binding, val onClick: (CardData) -> Unit)
         : RecyclerView.ViewHolder(binding.root) {
         init {
             itemView.setOnClickListener {
@@ -74,7 +73,6 @@ class CardAdapter( private val onClick: (CardData) -> Unit) :
             // 숫자에 소수점 추가하기
             val decimal = DecimalFormat("#,###")
             val num = decimal.format(card.cardMoney)
-
             binding.cardName.text = card.cardName
             binding.cardExpiration.text = card.cardExpiration
             binding.cardNumber.text = card.cardNumber
@@ -84,25 +82,32 @@ class CardAdapter( private val onClick: (CardData) -> Unit) :
     }
 
     override fun getItemViewType(position: Int): Int {
+        return cardList[position].viewType // positon을 when으로 빼지않고, 각 position의 type값을 받아와서 확장성있게 사용하기.
+    }
+
+    /* cf.
+    override fun getItemViewType(position: Int): Int {
         return when (position) {
             0 -> VIEW_TYPE1
             1 -> VIEW_TYPE2
             2 -> VIEW_TYPE3
-            else -> throw IllegalArgumentException("Invalid position")
+            else -> throw Exception()
         }
-//                cardList[position].viewType
     }
+     */
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType) {
-            CardData.VIEW_TYPE1 -> {
+            VIEW_TYPE1 -> {
                 val binding = LayoutInflater.from(parent.context).inflate(R.layout.item_type1, parent, false)
                 return CardViewHolder1(ItemType1Binding.bind(binding), onClick)
             }
-            CardData.VIEW_TYPE2 -> {
+            VIEW_TYPE2 -> {
                 val binding = LayoutInflater.from(parent.context).inflate(R.layout.item_type2, parent, false)
                 return CardViewHolder2(ItemType2Binding.bind(binding), onClick)
             }
-            CardData.VIEW_TYPE3 -> {
+            VIEW_TYPE3 -> {
                 val binding = LayoutInflater.from(parent.context).inflate(R.layout.item_type3, parent, false)
                 return CardViewHolder3(ItemType3Binding.bind(binding), onClick)
             }
@@ -114,9 +119,9 @@ class CardAdapter( private val onClick: (CardData) -> Unit) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val obj = cardList[position]
         when(obj.viewType) {
-            CardData.VIEW_TYPE1 -> (holder as CardViewHolder1).bind1(obj)
-            CardData.VIEW_TYPE2 -> (holder as CardViewHolder2).bind2(obj)
-            CardData.VIEW_TYPE3 -> (holder as CardViewHolder3).bind3(obj)
+            VIEW_TYPE1 -> (holder as CardViewHolder1).bind1(obj)
+            VIEW_TYPE2 -> (holder as CardViewHolder2).bind2(obj)
+            VIEW_TYPE3 -> (holder as CardViewHolder3).bind3(obj)
 
         }
     }
