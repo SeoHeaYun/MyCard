@@ -1,14 +1,10 @@
-package com.example.mycard.presentation
+package com.example.mycard.ui_layer.user_interface
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.mycard.R
-import com.example.mycard.data.CardData
 import com.example.mycard.databinding.ActivityDetailBinding
+import com.example.mycard.ui_layer.model.CardModel
 import java.text.DecimalFormat
 
 class DetailActivity : AppCompatActivity() {
@@ -20,8 +16,13 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        initVeiw()
+
+    }
+
+    fun initVeiw () {
         val intent : Intent = getIntent()
-        val item = intent.getParcelableExtra<CardData>("Bundle")
+        val item = intent.getParcelableExtra<CardModel>("Bundle")
 
         val cardName = item?.cardName
         val cardNumber = item?.cardNumber
@@ -32,11 +33,9 @@ class DetailActivity : AppCompatActivity() {
         val decimal = DecimalFormat("0,000.00") // cf. ###
         val num = decimal.format(cardMoney)
 
-       binding.tvName.text = cardName
-       binding.tvCard.text = cardNumber
-       binding.tvExpiration.text = cardExpriration
-       binding.tvMoney.text = num
-
-
-        }
+        binding.tvName.text = cardName
+        binding.tvCard.text = cardNumber
+        binding.tvExpiration.text = cardExpriration
+        binding.tvMoney.text = num
     }
+}

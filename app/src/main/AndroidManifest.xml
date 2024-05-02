@@ -13,10 +13,10 @@
         android:theme="@style/Theme.Mycard"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.DetailActivity"
+            android:name=".ui_layer.user_interface.DetailActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui_layer.user_interface.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
